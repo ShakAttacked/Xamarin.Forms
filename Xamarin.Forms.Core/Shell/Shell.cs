@@ -1053,14 +1053,18 @@ namespace Xamarin.Forms
 			return element;
 		}
 
-
-		#region IPropertyPropagationController
 		void IPropertyPropagationController.PropagatePropertyChanged(string propertyName)
 		{
 			PropertyPropagationExtensions.PropagatePropertyChanged(propertyName, this, LogicalChildren);
 			if (FlyoutHeaderView != null)
 				PropertyPropagationExtensions.PropagatePropertyChanged(propertyName, this, new[] { FlyoutHeaderView });
 		}
-		#endregion
+
+		protected override void OnBindingContextChanged()
+		{
+			base.OnBindingContextChanged();
+			if (GetSearchHandler(this) is var searchHandler)
+				SetInheritedBindingContext(searchHandler, BindingContext);
+		}
 	}
 }
